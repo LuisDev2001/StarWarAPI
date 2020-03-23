@@ -1,5 +1,12 @@
-function init() {
-  fetch('https://swapi.co/api/people/')
+let container = document.getElementById('js_container');
+
+let btnPreviusPage = document.getElementById('nextPrevius');
+let btnNextPage = document.getElementById('nextPage');
+
+let currentPage = 1 // Pagina actual
+
+function init(currentPage) {
+  fetch(`https://swapi.co/api/people/?page=${currentPage}`)
   .then(function(response) {
     return response.json();
   }).then(function(users){
@@ -31,14 +38,34 @@ function createCard(user) {
     <p>${eye_color}</p>
     <p>${birth_year}</p>
     <p>${gender}</p>
-  `;
-
-  return card;
+    `;
+    
+    return card;
 }
-
+  
 function insertCard(card) {
-  let container = document.getElementById('js_container');
   container.appendChild(card)
 }
+  
+function clearPage() {
+  while(container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
+  }
+}
 
-init()
+function nextPage() {
+  currentPage++
+  clearPage()
+  init(currentPage)
+}
+
+function previusPage() {
+  currentPage--
+  clearPage()
+  init(currentPage)
+}
+
+init(currentPage)
+
+btnNextPage.addEventListener('click', () => nextPage())
+btnPreviusPage.addEventListener('click', () => previusPage())
